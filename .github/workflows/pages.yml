@@ -1,0 +1,51 @@
+name: Publish tested offline Prompt Evaluation Harness
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    branches: [main]
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: prompt-harness-pages
+  cancel-in-progress: false
+jobs:
+  pages:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      actions: read
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Require exact merged main source
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SHA"
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main)" = "$SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source and stage only approved static files
+        run: |
+          npm test
+          npm run check:site
+          npm run stage
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/pages
+      - uses: actions/deploy-pages@v4
+        id: deploy

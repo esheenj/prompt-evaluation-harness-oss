@@ -1,0 +1,16 @@
+{
+  "name": "prompt-evaluation-harness-oss",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Offline prompt-output evaluation fixtures, rule checks and visual comparison",
+  "engines": {"node": ">=20"},
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "demo": "node bin/evaluate.mjs",
+    "check:site": "node scripts/check-site.mjs",
+    "stage": "node scripts/stage-site.mjs",
+    "browser:smoke": "node scripts/browser-check.mjs"
+  }
+}

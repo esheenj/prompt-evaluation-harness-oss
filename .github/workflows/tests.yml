@@ -1,0 +1,45 @@
+name: Tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  evaluator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Original deterministic evaluator and fail-closed checks
+        run: npm test
+      - name: Static site security and usability contracts
+        run: npm run check:site
+      - name: Synthetic comparison report
+        run: |
+          node bin/evaluate.mjs > /tmp/prompt-evaluation.json
+          node --input-type=module -e "import fs from 'node:fs';const x=JSON.parse(fs.readFileSync('/tmp/prompt-evaluation.json'));if(x.scenarios!==3||x.reports.some(r=>r.results[0].status!=='CHECKS_PASS'||r.results[1].status!=='NEEDS_REVISION'||r.results.some(c=>c.semanticQualityVerified)))process.exit(1);"
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Stage exact public source bundle
+        run: npm run stage
+      - name: Real headless Chrome scenario tests
+        run: |
+          google-chrome --version
+          npm run browser:smoke

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Compare fictional AI outputs with repeatable rubric checks. A free offline prompt evaluation playground from Esheen Labs.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Prompt Evaluation Harness — Esheen Labs</title>
+<style>
+:root{font:16px/1.58 system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark;--bg:#090f0b;--sheet:#112018;--sheet2:#16291d;--line:#34503b;--ink:#f1f8f1;--dim:#a9c2b1;--green:#baf78a;--cyan:#7bdfb8;--yellow:#ffd795;--warn:#ffaaa6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse 54% 35% at 85% 0%,#2a68473d,transparent 74%),var(--bg);color:var(--ink);overflow-wrap:anywhere}
+a{color:var(--green);text-underline-offset:.2em}a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--green);outline-offset:4px}
+.frame{width:min(100% - 2rem,77rem);margin-inline:auto}.skip{position:absolute;left:1rem;top:-5rem;background:var(--green);color:#092015;z-index:4;padding:.55rem 1rem}.skip:focus{top:1rem}
+nav{border-bottom:1px solid #ffffff22}nav .inner{min-height:5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.brand{display:flex;align-items:center;gap:.8rem;color:var(--ink);text-decoration:none;font-weight:850;letter-spacing:.035em}
+.sigma{width:2.6rem;height:2.6rem;display:grid;place-items:center;border:1px solid #b2f3ba83;border-radius:.78rem;background:linear-gradient(120deg,#255a3a,#0a1d12);color:var(--green);font-size:1.55rem}
+.brand small{display:block;color:var(--cyan);letter-spacing:.19em;line-height:1.15;font-size:.6rem}.navlinks{display:flex;gap:1.2rem;font-size:.82rem;flex-wrap:wrap}.navlinks a{text-decoration:none}
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(13rem,.9fr);align-items:center;gap:2rem;padding:clamp(3rem,6vw,5.3rem) 0 3rem}
+.kicker{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800}.hero h1{font-size:clamp(2.8rem,6.2vw,5.8rem);letter-spacing:-.07em;line-height:1.025;margin:.8rem 0 1.35rem;max-width:13ch}.hero h1 em{font-style:normal;color:var(--green)}
+.lead{color:var(--dim);font-size:clamp(1rem,1.45vw,1.21rem);max-width:50ch}.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.8rem}.tags span{font-size:.72rem;border:1px solid #99daab54;padding:.34rem .7rem;border-radius:50px;color:#d0e6d2}
+.visual{min-height:18rem;aspect-ratio:1.25;display:grid;place-items:center;position:relative;isolation:isolate}
+.visual:before{content:"";position:absolute;z-index:-1;inset:10%;background:radial-gradient(circle,#5ebc7b4f,transparent 75%);filter:blur(18px)}
+.visual .orbit{position:absolute;inset:8%;border-radius:50%;border:1px solid #b0fba855}.visual .orbit.two{inset:23%;border-style:dashed;border-color:#78e9b47d}.visual .orbit.three{inset:37%;border-color:#e7ffa2}
+.visual .node{display:grid;place-items:center;z-index:1;width:21%;aspect-ratio:1;border-radius:1.2rem;background:#184531;color:var(--green);border:1px solid #b0ffbf8e;font-size:clamp(2rem,4vw,3.2rem);transform:rotate(-12deg)}
+.visual .pin{position:absolute;font-size:.7rem;border:1px solid #8fddaa66;border-radius:2rem;background:#0f2419;padding:.4rem .7rem;color:var(--green);font-weight:780}
+.pin.one{top:7%;left:0}.pin.two{bottom:14%;right:2%}.pin.three{bottom:4%;left:11%}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin:1rem 0 1.4rem}.sectionhead h2{margin:.25rem 0 .4rem;font-size:clamp(1.8rem,3.3vw,2.9rem);letter-spacing:-.045em;line-height:1.14}.sectionhead p{max-width:57ch;color:var(--dim);margin:0}
+.panel{border:1px solid #ffffff26;background:linear-gradient(145deg,#14251a,#0e1b13);border-radius:1.25rem;padding:clamp(1rem,2.4vw,1.8rem)}
+.workbench{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:1rem}
+.scenario-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin:1.3rem 0}
+button{font:inherit;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.tab{min-height:62px;color:var(--dim);background:#ffffff07;border:1px solid #ffffff27;border-radius:.75rem;text-align:left;padding:.7rem;font-size:.8rem;font-weight:750}
+.tab[aria-pressed="true"]{color:var(--green);border-color:#9fe79d;background:#a3fcb113}.tab:hover{border-color:#95dba0}
+.case-title{font-size:1.34rem;line-height:1.25;margin:1.25rem 0 .5rem;letter-spacing:-.03em}.subtext{color:var(--dim);font-size:.87rem}.evidence{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:1rem 0}
+.evidence span{border:1px solid #c4dfab4f;color:#c8e8ba;border-radius:.4rem;padding:.15rem .45rem;font: .7rem/1.5 ui-monospace,monospace}
+.candidate{margin-top:1rem}.candidate label{font-size:.83rem;display:block;font-weight:770;margin-bottom:.4rem}.candidate textarea{border:1px solid var(--line);border-radius:.72rem;background:#08170e;color:var(--ink);padding:.83rem;font: .81rem/1.55 ui-monospace,SFMono-Regular,monospace;width:100%;min-height:8rem;resize:vertical}
+.counter{text-align:right;color:var(--dim);font-size:.7rem}
+.actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}.action{border:1px solid var(--green);border-radius:.7rem;background:var(--green);color:#061709;min-height:46px;padding:.65rem 1rem;font-weight:820}.action:hover{background:#d4ffb2;transform:translateY(-1px)}
+.action.secondary{background:transparent;color:var(--ink);border-color:#ffffff4c}.action.secondary:hover{background:#ffffff10}
+.result{border:1px solid #ffffff25;border-radius:.85rem;background:#07170e94;padding:1rem;margin-top:.85rem}.result-top{display:flex;align-items:start;justify-content:space-between;gap:1rem}.result h3{margin:0;font-size:.98rem}.badge{font-size:.65rem;border:1px solid #8fcfa7;border-radius:99px;padding:.3rem .65rem;color:var(--green);font-weight:850;white-space:nowrap}.result[data-state="NEEDS_REVISION"] .badge{color:var(--yellow);border-color:#ffda9f7b}
+.metrics{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin:.5rem 0 .7rem}.score{font-size:2.15rem;font-weight:790;letter-spacing:-.06em;line-height:1}.score small{font-size:.74rem;letter-spacing:0;color:var(--dim)}
+.meter{height:.45rem;border-radius:99px;background:#ffffff1a;overflow:hidden}.meter span{display:block;height:100%;border-radius:99px;background:var(--green);width:0;transition:width .25s}.result[data-state="NEEDS_REVISION"] .meter span{background:var(--yellow)}
+.details{margin:.7rem 0 0;padding:0;list-style:none}.details li{font-size:.75rem;color:var(--dim);padding:.45rem 0;border-bottom:1px solid #ffffff16;display:flex;gap:.6rem;align-items:start}
+.details strong{color:var(--green);flex:none;font-size:.67rem}.details [data-pass="false"] strong{color:var(--yellow)}
+.foot{border-top:1px solid #ffffff26;margin-top:2rem;padding:2.5rem 0 4rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.foot h2{font-size:1.35rem;letter-spacing:-.025em;margin:.2rem 0}.foot p{color:var(--dim);font-size:.88rem}
+details{margin-top:1.2rem;color:var(--dim);font-size:.81rem}summary{cursor:pointer;min-height:40px;color:var(--green);padding:.45rem 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:.7rem/1.6 ui-monospace,monospace;border:1px solid #ffffff24;border-radius:.7rem;background:#041209;padding:1rem;max-height:16rem;overflow:auto}
+@media(max-width:840px){.hero{grid-template-columns:1fr}.visual{display:none}.workbench{grid-template-columns:1fr}.hero{padding-bottom:1rem}}
+@media(max-width:520px){.frame{width:min(100% - 1.35rem,77rem)}.navlinks{font-size:.73rem;gap:.6rem}.brand{font-size:.8rem;gap:.45rem}.sigma{width:2rem;height:2rem}.hero h1{font-size:clamp(2.55rem,11vw,4rem)}.scenario-tabs{grid-template-columns:1fr}.foot{grid-template-columns:1fr}.result-top{flex-direction:column;gap:.35rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body data-active-suite="loading">
+<a class="skip" href="#workspace">Skip to evaluation workbench</a>
+<nav><div class="frame inner"><a class="brand" href="https://esheenj.github.io/compound-intelligence-starter/"><span class="sigma" aria-hidden="true">Σ</span><span>ESHEEN LABS<small>OPEN INTELLIGENCE</small></span></a><div class="navlinks"><a href="https://esheenj.github.io/compound-intelligence-starter/">All labs</a><a href="https://github.com/esheenj/prompt-evaluation-harness-oss">Source</a></div></div></nav>
+<header class="frame hero"><div><p class="kicker">Original AI tooling · Experiment 09</p><h1>Better prompts.<br><em>Measurable checks.</em></h1><p class="lead">Compare two AI outputs against a repeatable rubric. Explore grounded responses, structured incident updates and safe agent handoffs—without sending anything to a model or API.</p>
+<div class="tags"><span>Try it in your browser</span><span>No signup or model call</span><span>Offline-friendly</span><span>Fully inspectable rules</span></div></div>
+<div class="visual" aria-hidden="true"><span class="orbit"></span><span class="orbit two"></span><span class="orbit three"></span><span class="node">✓</span><span class="pin one">REPRODUCIBLE</span><span class="pin two">EVIDENCE FIRST</span><span class="pin three">0 REMOTE CALLS</span></div></header>
+<main class="frame" id="workspace"><div class="sectionhead"><div><p class="kicker">01 / The evaluation workbench</p><h2>Challenge the output, not the hype.</h2><p>Choose a fictional task, edit the candidate responses and see exactly which deterministic checks pass. A score is rule coverage, not proof of accuracy.</p></div></div>
+<div class="workbench">
+<section class="panel" aria-labelledby="scenario-heading"><p class="kicker">INPUTS / RUBRIC</p><h2 id="scenario-heading" class="case-title">Choose a scenario</h2><div id="scenarios" class="scenario-tabs" aria-label="Fictional prompt-evaluation scenarios"></div>
+<h3 class="case-title" id="case-title">Loading scenarios…</h3><p class="subtext" id="case-description"></p><div class="evidence" id="evidence"></div>
+<div class="candidate"><label for="output-a" id="label-a">Candidate A</label><textarea id="output-a" spellcheck="false" maxlength="4000"></textarea><div id="count-a" class="counter"></div></div>
+<div class="candidate"><label for="output-b" id="label-b">Candidate B</label><textarea id="output-b" spellcheck="false" maxlength="4000"></textarea><div id="count-b" class="counter"></div></div>
+<div class="actions"><button class="action" id="evaluate" type="button">Evaluate both outputs ↗</button><button class="action secondary" id="reset" type="button">Restore examples</button></div>
+<p class="subtext">Only fictional inputs, please. Nothing is stored, tracked or transmitted. Checks include wording, length, allowed evidence identifiers and JSON structure.</p>
+</section>
+<section class="panel" aria-labelledby="results-heading"><p class="kicker">OUTPUT / REVIEW</p><h2 id="results-heading" class="case-title">See why a result passes.</h2><p class="subtext">The rubric does not assess hidden intent, correctness, originality, bias or model performance. A human must inspect factual meaning.</p>
+<div id="results" aria-live="polite" aria-relevant="additions text"></div>
+<details><summary>Inspect the machine-readable results</summary><pre id="receipt">Select a scenario</pre></details>
+</section>
+</div>
+<section class="foot" aria-label="Developer notes and limitations"><div><p class="kicker">02 / For developers</p><h2>Test the same rubric in CI.</h2><p>Clone the source, add original fictional fixtures, use the Node CLI and run the built-in tests. The pure evaluation module is shared by the browser and CLI.</p><p><a href="https://github.com/esheenj/prompt-evaluation-harness-oss">Source and contribution guide</a> · <a href="https://esheenj.github.io/compound-intelligence-starter/">Explore other Esheen Labs MVPs</a></p></div>
+<div><p class="kicker">TRUST BOUNDARY</p><h2>Transparent rules ≠ real-world quality.</h2><p>Exact strings, bounded lengths, JSON keys and evidence IDs are structural tests only. They do not verify that evidence is genuine, that statements are true, or that a model is safe. No private data, client work, exchange actions, external AI calls or credentials are present.</p></div></section></main>
+<script type="module" src="./app.mjs"></script>
+</body></html>
