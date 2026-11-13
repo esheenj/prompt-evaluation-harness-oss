@@ -1,5 +1,7 @@
 # Prompt Evaluation Harness
 
+**Support this open-source project (optional):** [Esheen Labs crypto support](https://esheenj.github.io/compound-intelligence-starter/support.html) accepts maintainer-supplied BTC on Bitcoin and USDT on Solana, Ethereum/ERC-20 or Tron/TRC-20. The destination addresses are **custodial Pionex exchange deposits** and may change; check the exact network, current address and minimum before sending. Contributions do not buy priority, access or execution authority. All demos and source remain free.
+
 **Compare AI outputs with repeatable checks—not vague impressions.**
 
 This original standalone **offline prompt-output evaluation** tool from Esheen Labs helps developers inspect responses against explicit fictional criteria. It uses no models, accounts, APIs, telemetry, runtime packages or payments. The same deterministic evaluator powers the browser playground and command-line examples.
