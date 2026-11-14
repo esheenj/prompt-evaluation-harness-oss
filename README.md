@@ -1,5 +1,9 @@
 # Prompt Evaluation Harness
 
+**Product identity:** **Prompt Evaluation Harness** is the reusable offline evaluation code; **Prompt Evaluation Playground** is the name of its interactive browser experience. Both examine bounded, user-supplied text or JSON against explicit rules, not against a live model or verified semantic truth.
+
+**For developers and product teams:** compare two fictional response candidates, inspect exactly which checks passed, and reuse the deterministic checks for repeatable test fixtures. This free MIT reference is not a model-safety certification, live benchmark or commercial evaluation service.
+
 **Support this open-source project (optional):** [Esheen Labs crypto support](https://esheenj.github.io/compound-intelligence-starter/support.html) accepts maintainer-supplied BTC on Bitcoin and USDT on Solana, Ethereum/ERC-20 or Tron/TRC-20. The destination addresses are **custodial Pionex exchange deposits** and may change; check the exact network, current address and minimum before sending. Contributions do not buy priority, access or execution authority. All demos and source remain free.
 
 **Compare AI outputs with repeatable checks—not vague impressions.**
